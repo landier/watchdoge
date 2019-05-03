@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  # db:
+  #   image: mariadb
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=boum
+  #     - MYSQL_DATABASE=boum
+  #     - MYSQL_USER=boum
+  #     - MYSQL_PASSWORD=boum
+  #   networks:
+  #     - backend
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - db-data:/var/lib/mysql/data
+  
+  # app:
+  #   build: app/
+  #   networks:
+  #     - frontend
+  #     - backend
+  #   ports:
+  #     - "8888:8888"
+  #   depends_on:
+  #     - db
+  
+  front:
+    build: front/
+    networks:
+      - front
+    ports:
+      - "80:80"
+
+  # elasticsearch:
+  #   image: elasticsearch:6.7.0
+  #   networks:
+  #     - backend
+  #   ports:
+  #     - "9200:9200"
+  #     - "9300:9300"
+  #   environment:
+  #     - discovery.type=single-node
+  #   volumes:
+  #     - es-data:/var/lib/elasticsearch/data
+
+# volumes:
+#   db-data:
+#   es-data:
+
+networks:
+  front:
+    driver: bridge
+#   backend:
+#     driver: bridge

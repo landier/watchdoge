@@ -1,5 +1,5 @@
 # Stage 1 - build environment
-FROM node:carbon as build
+FROM node:latest as build
 LABEL maintainer="nicolas.landier@gmail.com"
 
 WORKDIR /usr/src/front

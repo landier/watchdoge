@@ -14,7 +14,7 @@ ReactDOM.render(
             <strong>Holy guacamole!</strong> You should check in on some of those fields below.
         </div>
         <p>Hello World</p>
-    </div>, document.getElementById('boum'));
+    </div>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

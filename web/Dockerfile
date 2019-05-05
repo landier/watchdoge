@@ -1,6 +1,7 @@
 # Stage 1 - build environment
 FROM node:latest as build
 LABEL maintainer="nicolas.landier@gmail.com"
+LABEL project="coincoin"
 
 WORKDIR /usr/src/front
 COPY package*.json yarn.lock ./

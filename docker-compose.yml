@@ -25,8 +25,8 @@ services:
   #   depends_on:
   #     - db
   
-  front:
-    build: front/
+  web:
+    build: web/
     networks:
       - front
     ports:

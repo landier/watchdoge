@@ -24,7 +24,17 @@ services:
   #     - "8888:8888"
   #   depends_on:
   #     - db
-  
+  datastore:
+    image: redis
+    command:
+      redis-server --appendonly yes
+    networks:
+      - backend
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
   web:
     build: web/
     networks:
@@ -44,12 +54,13 @@ services:
   #   volumes:
   #     - es-data:/var/lib/elasticsearch/data
 
-# volumes:
+volumes:
+  redis-data:
 #   db-data:
 #   es-data:
 
 networks:
   front:
     driver: bridge
-#   backend:
-#     driver: bridge
+  backend:
+    driver: bridge

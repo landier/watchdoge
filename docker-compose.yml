@@ -24,16 +24,18 @@ services:
   #     - "8888:8888"
   #   depends_on:
   #     - db
-  datastore:
+
+  redis:
     image: redis
     command:
-      redis-server --appendonly yes
+      redis-server /usr/local/etc/redis/redis.conf
     networks:
       - backend
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
+      - ${PWD}/redis.conf:/usr/local/etc/redis/redis.conf
 
   web:
     build: web/

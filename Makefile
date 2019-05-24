@@ -11,4 +11,5 @@ run: build
 	docker-compose up
 
 clean:
+	docker-compose down
 	docker rmi $$(docker images --filter "label=project=coincoin" --quiet)

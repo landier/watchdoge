@@ -10,6 +10,9 @@ redis-cli:
 run: build
 	docker-compose up
 
+deploy: build
+	docker stack deploy -c docker-compose.yml coin
+
 clean:
 	docker-compose down
 	docker rmi $$(docker images --filter "label=project=coincoin" --quiet)

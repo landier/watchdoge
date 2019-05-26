@@ -39,6 +39,7 @@ services:
 
   web:
     build: web/
+    image: web
     networks:
       - front
     ports:
@@ -63,6 +64,6 @@ volumes:
 
 networks:
   front:
-    driver: bridge
+    driver: overlay
   backend:
-    driver: bridge
+    driver: overlay

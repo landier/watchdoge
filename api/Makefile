@@ -6,7 +6,10 @@ init:
 	python3 -m pipenv install --dev
 
 run:
-	python3 -m pipenv run python exchange_puller.py
+	# python3 -m pipenv run python exchange_puller.py
+	# python3 -m pipenv run python events.py
+	# python3 -m pipenv run python pubsub.py
+	python3 -m pipenv run python data.py
 
 shell:
 	python3 -m pipenv shell

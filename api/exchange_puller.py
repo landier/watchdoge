@@ -6,8 +6,8 @@ import logging
 import signal
 
 
-PULL_INTERVAL_MS = 5 * 60
-JITTER = 0.13
+PULL_INTERVAL_MS = 60 * 1000 # 1 minute
+JITTER = 0.314159
 
 logging.basicConfig(level='DEBUG')
 log = logging.getLogger(__name__)
@@ -36,19 +36,17 @@ class ExchangePuller:
             self.cnt += 1
 
         #milliseconds
-        main_loop = tornado.ioloop.IOLoop.current()
+        self.main_loop = tornado.ioloop.IOLoop.current()
         self.sched = tornado.ioloop.PeriodicCallback(schedule_func, PULL_INTERVAL_MS, JITTER)
         #start your period timer
         self.sched.start()
         #start your loop
-        main_loop.start()
-        main_loop.stop()
-        log.info('shutdown')
+        self.main_loop.start()
 
     async def stop(self):
         log.info('shutting down')
         self.sched.stop()
-        tornado.ioloop.IOLoop.current().stop()
+        self.main_loop.stop()
 
 
 if __name__ == '__main__':

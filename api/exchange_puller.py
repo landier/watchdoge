@@ -5,6 +5,7 @@ import config
 import logging
 import signal
 
+
 PULL_INTERVAL_MS = 5 * 60
 JITTER = 0.13
 
@@ -22,14 +23,15 @@ class ExchangePuller:
         signal.signal(signal.SIGINT,  exit_handler)
 
         self.conf = exchange_platform
-        # self.client = Client(exchange_platform.api_key, exchange_platform.secret_key)
+        self.client = Client(exchange_platform.api_key, exchange_platform.secret_key)
         self.cnt = 0
 
     def run(self):
         log.info('starting')
+
         def schedule_func():
-            #DO SOMETHING#
-            # balances = self.client.get_account()
+            balances = self.client.get_account()
+            log.debug(balances)
             log.debug(self.cnt)
             self.cnt += 1
 
@@ -50,7 +52,6 @@ class ExchangePuller:
 
 
 if __name__ == '__main__':
-   
     binance_conf = ExchangePlatform(name='Binance',
                                     api_key=config.API_KEY,
                                     secret_key=config.SECRET_KEY)

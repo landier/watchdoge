@@ -14,6 +14,13 @@ log = logging.getLogger(__name__)
 
 class ExchangePuller:
     def __init__(self, exchange_platform: ExchangePlatform):
+        def exit_handler(sig, frame):
+            log.info('exiting')
+            tornado.ioloop.IOLoop.instance().add_callback_from_signal(self.stop)
+        
+        signal.signal(signal.SIGTERM, exit_handler)
+        signal.signal(signal.SIGINT,  exit_handler)
+
         self.conf = exchange_platform
         # self.client = Client(exchange_platform.api_key, exchange_platform.secret_key)
         self.cnt = 0
@@ -28,28 +35,22 @@ class ExchangePuller:
 
         #milliseconds
         main_loop = tornado.ioloop.IOLoop.current()
-        sched = tornado.ioloop.PeriodicCallback(schedule_func, PULL_INTERVAL_MS, JITTER)
+        self.sched = tornado.ioloop.PeriodicCallback(schedule_func, PULL_INTERVAL_MS, JITTER)
         #start your period timer
-        sched.start()
+        self.sched.start()
         #start your loop
         main_loop.start()
         main_loop.stop()
         log.info('shutdown')
 
-    
-def exit_handler(sig, frame):
-    log.info('exiting')
-    tornado.ioloop.IOLoop.instance().add_callback_from_signal(shutdown)
-
-
-async def shutdown():
-    log.info('shutting down')
-    tornado.ioloop.IOLoop.current().stop()
+    async def stop(self):
+        log.info('shutting down')
+        self.sched.stop()
+        tornado.ioloop.IOLoop.current().stop()
 
 
 if __name__ == '__main__':
-    signal.signal(signal.SIGTERM, exit_handler)
-    signal.signal(signal.SIGINT,  exit_handler)
+   
     binance_conf = ExchangePlatform(name='Binance',
                                     api_key=config.API_KEY,
                                     secret_key=config.SECRET_KEY)

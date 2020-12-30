@@ -2,21 +2,28 @@
 version: '3'
 
 services:
-
-  db:
-    image: postgres:latest
-    restart: always
-    ports:
-      - 5432:5432
+  influxdb:
+    image: quay.io/influxdb/influxdb:v2.0.3
     volumes:
-      - ./docker/postgresql/data:/var/lib/postgresql/data:rw
-    environment:
-      POSTGRES_DB: watchdodge
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: example
-
-  adminer:
-    image: adminer
-    restart: always
+      - ./docker/data/influxdb:/var/lib/influxdb
     ports:
-      - 8080:8080
+      - "8086:8086"
+
+        #  db:
+        #    image: postgres:latest
+        #    restart: always
+        #    ports:
+        #      - 5432:5432
+        #    volumes:
+        #      - ./docker/postgresql/data:/var/lib/postgresql/data:rw
+        #    environment:
+        #      POSTGRES_DB: watchdodge
+        #      POSTGRES_USER: postgres
+        #      POSTGRES_PASSWORD: example
+
+        #  adminer:
+        #    image: adminer
+        #    restart: always
+        #    ports:
+        #      - 8080:8080
+

@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "feeder"
+version = "0.1.0"
+description = ""
+authors = ["Nicolas Landier <nicolas.landier@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+"binance.py" = "^1.6.0"
+aiohttp = "^3.7.3"
+influxdb-client = "^1.13.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

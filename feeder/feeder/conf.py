@@ -1,0 +1,3 @@
+pairs=['btcusdt',
+       'ethusdt',
+       'ltcusdt',]

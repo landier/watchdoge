@@ -1,9 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric
 from sqlalchemy.orm import relationship
-import sqlalchemy
-from api.models.base import DATABASE_URL
 
-from ..database import Base
+from api.models.base import Base
 
 
 class Asset(Base):

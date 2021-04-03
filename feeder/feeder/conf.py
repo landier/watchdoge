@@ -1,3 +1,0 @@
-pairs=['btcusdt',
-       'ethusdt',
-       'ltcusdt',]

@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric
+from sqlalchemy import DateTime, Boolean, Column, ForeignKey, Integer, String, Numeric
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import functions as func
 # from sqlalchemy.sql.sqltypes import Date, DateTime
@@ -14,7 +14,8 @@ class Asset(Base):
     balance = Column(Numeric, index=True)
     free = Column(Numeric, index=True)
     locked = Column(Numeric, index=True)
-    # updated = Column(DateTime, server_default=func.now(), onupdate=func.current_timestamp())
+    created = Column(DateTime, server_default=func.now())
+    updated = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     # owner_id = Column(Integer, ForeignKey('users.id'))
     # owner = relationship("User", back_populates="assets")

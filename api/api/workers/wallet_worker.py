@@ -42,10 +42,8 @@ class WalletWorker:
                       balance=Decimal(a['free'])+Decimal(a['locked']),
                       free=Decimal(a['free']),
                       locked=Decimal(a['locked']))
-                ic(asset)
-                self.db.add(asset)
+                self.db.merge(asset)
                 self.db.commit()
-                self.db.refresh(asset)
             await asyncio.sleep(WALLET_SYNC_PERIOD)
 
 

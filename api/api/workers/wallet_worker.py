@@ -1,15 +1,15 @@
 import asyncio
+from api.models.asset import Asset
+import asyncio
+from icecream import ic
 import os
+from binance.client import Client
 import time
 from decimal import Decimal
-
-from binance.client import Client
 from fastapi import Depends
-from icecream import ic
 from sqlalchemy.orm import Session
-
-from api.models.asset import Asset
 from api.models.base import get_db
+
 
 BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")
 BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")

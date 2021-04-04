@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from api import crud, schemas
 from api.models import item, user
 from api.models.asset import Asset
+from api.models.ticker import Ticker
 from api.models.base import Base, SessionLocal, engine, get_db
 from api.workers.wallet_worker import WalletWorker
 from api.workers.market_worker import MarketWorker
@@ -16,12 +17,16 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
+# import logging
+# logging.basicConfig()
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
 @app.on_event("startup")
 async def startup_event():
     app.wallet_worker = WalletWorker("Binance")
     app.market_worker = MarketWorker("Binance")
     app.tasks = [
-        asyncio.create_task(app.wallet_worker.fetch_asset_balances()),
+        # asyncio.create_task(app.wallet_worker.fetch_asset_balances()),
         asyncio.create_task(app.market_worker.fetch_markets()),
     ]
 
@@ -72,11 +77,3 @@ def create_item_for_user(
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
-
-
-# asset = Asset(exchange="Binance",
-#                       symbol="test",
-#                       balance=1.,locked=1., free=1.)
-# db = next(get_db())
-# db.add(asset)
-# db.commit()

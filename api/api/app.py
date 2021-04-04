@@ -5,7 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from api import crud, schemas
-from api.models import items, user
+from api.models import item, user
 from api.models.asset import Asset
 from api.models.base import Base, SessionLocal, engine, get_db
 from api.workers.wallet_worker import WalletWorker

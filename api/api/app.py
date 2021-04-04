@@ -64,9 +64,9 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return items
 
 
-asset = Asset(exchange="Binance",
-                      symbol="test",
-                      balance=1.,locked=1., free=1.)
-db = next(get_db())
-db.add(asset)
-db.commit()
+# asset = Asset(exchange="Binance",
+#                       symbol="test",
+#                       balance=1.,locked=1., free=1.)
+# db = next(get_db())
+# db.add(asset)
+# db.commit()

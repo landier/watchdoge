@@ -9,6 +9,7 @@ from api.models import item, user
 from api.models.asset import Asset
 from api.models.base import Base, SessionLocal, engine, get_db
 from api.workers.wallet_worker import WalletWorker
+from api.workers.market_worker import MarketWorker
 
 Base.metadata.create_all(bind=engine)
 
@@ -18,7 +19,11 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     app.wallet_worker = WalletWorker("Binance")
-    app.tasks = [asyncio.create_task(app.wallet_worker.fetch_asset_balances())]
+    app.market_worker = MarketWorker("Binance")
+    app.tasks = [
+        asyncio.create_task(app.wallet_worker.fetch_asset_balances()),
+        asyncio.create_task(app.market_worker.fetch_markets()),
+    ]
 
 
 @app.on_event("shutdown")

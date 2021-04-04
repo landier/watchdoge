@@ -1,3 +1,4 @@
+import asyncio
 from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -6,10 +7,26 @@ from sqlalchemy.orm import Session
 from api import crud, schemas
 from api.models import models, user
 from api.models.base import get_db, SessionLocal, engine
+from api.workers.wallet_worker import WalletWorker
+
 
 models.Base.metadata.create_all(bind=engine)
 
+
 app = FastAPI()
+
+
+@app.on_event("startup")
+async def startup_event():
+    app.wallet_worker = WalletWorker(1)
+    app.tasks = [asyncio.create_task(app.wallet_worker.fetch_assets())]
+
+
+@app.on_event("shutdown")
+def shutdown_event():
+    [t.cancel() for t in app.tasks]
+    with open("log.txt", mode="a") as log:
+        log.write("Application shutdown")
 
 
 @app.post("/users/", response_model=schemas.User)

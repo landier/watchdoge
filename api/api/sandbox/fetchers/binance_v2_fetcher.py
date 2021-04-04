@@ -3,9 +3,7 @@ import json
 
 from binance.client import Client
 from binance.websockets import BinanceSocketManager
-
 from feeder.fetchers.base_fetcher import BaseFetcher
-
 
 dcm1 = None
 loop = None

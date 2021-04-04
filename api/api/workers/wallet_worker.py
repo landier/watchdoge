@@ -1,15 +1,15 @@
 import asyncio
-from api.models.asset import Asset
-import asyncio
-from icecream import ic
 import os
-from binance.client import Client
 import time
 from decimal import Decimal
-from fastapi import Depends
-from sqlalchemy.orm import Session
-from api.models.base import get_db
 
+from binance.client import Client
+from fastapi import Depends
+from icecream import ic
+from sqlalchemy.orm import Session
+
+from api.models.asset import Asset
+from api.models.base import get_db
 
 BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")
 BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")
@@ -23,10 +23,6 @@ class WalletWorker:
         self.db = next(db)
         self.shutdown = False
         self.client = Client(BINANCE_API_KEY, BINANCE_API_SECRET)
-        # ic(dir(self.client))
-    
-    def start(self):
-        pass
 
     async def fetch_asset_balances(self):
         "Fetch asset balances"
@@ -38,7 +34,6 @@ class WalletWorker:
             for a in non_zero_assets:
                 asset = Asset(exchange=self.name,
                       symbol=a['asset'],
-                    #   balance=1.,locked=1., free=1.)
                       balance=Decimal(a['free'])+Decimal(a['locked']),
                       free=Decimal(a['free']),
                       locked=Decimal(a['locked']))

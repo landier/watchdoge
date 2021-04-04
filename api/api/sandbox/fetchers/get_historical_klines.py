@@ -2,8 +2,10 @@
 # https://gist.github.com/sammchardy/3547cfab1faf78e385b3fcb83ad86395
 # https://gist.github.com/sammchardy/fcbb2b836d1f694f39bddd569d1c16fe
 
-from binance.client import Client
 import time
+
+from binance.client import Client
+
 
 def get_historical_klines(symbol, interval, start_str, end_str=None):
     """Get Historical Klines from Binance

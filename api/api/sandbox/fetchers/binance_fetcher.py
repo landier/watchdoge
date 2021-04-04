@@ -1,11 +1,11 @@
 import os
 import time
-import binance
 from uuid import uuid4
-from influxdb_client import Point, WritePrecision
-from feeder.fetchers.base_fetcher import BaseFetcher
-from feeder.conf import pairs
 
+import binance
+from feeder.conf import pairs
+from feeder.fetchers.base_fetcher import BaseFetcher
+from influxdb_client import Point, WritePrecision
 
 BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")
 BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")

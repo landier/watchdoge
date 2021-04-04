@@ -1,10 +1,10 @@
-import hmac
 import hashlib
+import hmac
 import os
 import time
-import requests
 from urllib.parse import urlencode
 
+import requests
 
 API_ENDPOINT = "https://api.binance.com"
 BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")

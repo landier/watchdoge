@@ -5,7 +5,7 @@ from api.models.base import Base
 
 
 class Asset(Base):
-    __tablename__ = "wallets"
+    __tablename__ = "assets"
 
     id = Column(Integer, primary_key=True, index=True)
     exchange = Column(String, index=True)
@@ -14,4 +14,5 @@ class Asset(Base):
     free = Column(Numeric, index=True)
     locked = Column(Numeric, index=True)
 
-    owner = relationship("User", back_populates="assets")
+    # owner_id = Column(Integer, ForeignKey('users.id'))
+    # owner = relationship("User", back_populates="assets")

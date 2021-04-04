@@ -5,21 +5,21 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from api import crud, schemas
-from api.models import models, user
-from api.models.base import get_db, SessionLocal, engine
+from api.models import items, user
+from api.models.asset import Asset
+from api.models.base import Base, get_db, SessionLocal, engine
 from api.workers.wallet_worker import WalletWorker
 
 
-models.Base.metadata.create_all(bind=engine)
-
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 
 @app.on_event("startup")
 async def startup_event():
-    app.wallet_worker = WalletWorker(1)
-    app.tasks = [asyncio.create_task(app.wallet_worker.fetch_assets())]
+    app.wallet_worker = WalletWorker("Binance")
+    app.tasks = [asyncio.create_task(app.wallet_worker.fetch_asset_balances())]
 
 
 @app.on_event("shutdown")
@@ -62,3 +62,11 @@ def create_item_for_user(
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
+
+
+asset = Asset(exchange="Binance",
+                      symbol="test",
+                      balance=1.,locked=1., free=1.)
+db = next(get_db())
+db.add(asset)
+db.commit()

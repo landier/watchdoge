@@ -5,6 +5,11 @@ from icecream import ic
 import os
 from binance.client import Client
 import time
+from decimal import Decimal
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from api.models.base import get_db
+
 
 BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")
 BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")
@@ -13,8 +18,9 @@ WALLET_SYNC_PERIOD = int(os.getenv("WATCHDODGE_WALLET_SYNC_PERIOD", 60))
 
 
 class WalletWorker:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, name, db: Session = get_db()):
+        self.name = str(name)
+        self.db = next(db)
         self.shutdown = False
         self.client = Client(BINANCE_API_KEY, BINANCE_API_SECRET)
         # ic(dir(self.client))
@@ -22,13 +28,24 @@ class WalletWorker:
     def start(self):
         pass
 
-    async def fetch_assets(self):
-        "Fetch assets"
+    async def fetch_asset_balances(self):
+        "Fetch asset balances"
         while not self.shutdown:
             ic(time.time_ns())
             details = await self.client.get_account()
             non_zero_assets = [a for a in details['balances'] if float(a['free'])+float(a['locked']) > .0]
             ic(non_zero_assets)
+            for a in non_zero_assets:
+                asset = Asset(exchange=self.name,
+                      symbol=a['asset'],
+                    #   balance=1.,locked=1., free=1.)
+                      balance=Decimal(a['free'])+Decimal(a['locked']),
+                      free=Decimal(a['free']),
+                      locked=Decimal(a['locked']))
+                ic(asset)
+                self.db.add(asset)
+                self.db.commit()
+                self.db.refresh(asset)
             await asyncio.sleep(WALLET_SYNC_PERIOD)
 
 

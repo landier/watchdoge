@@ -2,9 +2,9 @@ import asyncio
 from api.models.asset import Asset
 import asyncio
 from icecream import ic
-import binance
 import os
-
+from binance.client import Client
+import time
 
 BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")
 BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")
@@ -12,10 +12,12 @@ BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")
 WALLET_SYNC_PERIOD = int(os.getenv("WATCHDODGE_WALLET_SYNC_PERIOD", 60))
 
 
-class WalletWorker():
+class WalletWorker:
     def __init__(self, name):
         self.name = name
         self.shutdown = False
+        self.client = Client(BINANCE_API_KEY, BINANCE_API_SECRET)
+        # ic(dir(self.client))
     
     def start(self):
         pass
@@ -23,7 +25,10 @@ class WalletWorker():
     async def fetch_assets(self):
         "Fetch assets"
         while not self.shutdown:
-            ic("bim " + str(self.name))
+            ic(time.time_ns())
+            details = await self.client.get_account()
+            non_zero_assets = [a for a in details['balances'] if float(a['free'])+float(a['locked']) > .0]
+            ic(non_zero_assets)
             await asyncio.sleep(WALLET_SYNC_PERIOD)
 
 

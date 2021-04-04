@@ -25,8 +25,8 @@ async def startup_event():
 @app.on_event("shutdown")
 def shutdown_event():
     [t.cancel() for t in app.tasks]
-    with open("log.txt", mode="a") as log:
-        log.write("Application shutdown")
+    # with open("log.txt", mode="a") as log:
+    #     log.write("Application shutdown")
 
 
 @app.post("/users/", response_model=schemas.User)

@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import List, Optional
 
 from pydantic import BaseModel
@@ -33,5 +34,14 @@ class User(UserBase):
     is_active: bool
     items: List[Item] = []
 
+    class Config:
+        orm_mode = True
+
+class Asset(BaseModel):
+    exchange: str
+    symbol: str
+    balance: Decimal
+    free: Decimal
+    locked: Decimal
     class Config:
         orm_mode = True

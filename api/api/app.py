@@ -42,6 +42,12 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
+@app.get("/assets/", response_model=List[schemas.Asset])
+def get_assets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    assets = db.query(Asset).offset(skip).limit(limit).all()
+    return assets
+
+
 @app.get("/users/{user_id}", response_model=schemas.User)
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)

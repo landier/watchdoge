@@ -24,8 +24,8 @@ class WalletWorker:
         self.shutdown = False
         self.client = Client(BINANCE_API_KEY, BINANCE_API_SECRET)
 
-    async def fetch_asset_balances(self):
-        "Fetch asset balances"
+    async def fetch_assets(self):
+        "Fetch assets"
         while not self.shutdown:
             ic(time.time_ns())
             details = await self.client.get_account()

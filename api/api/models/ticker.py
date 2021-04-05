@@ -32,8 +32,7 @@ class Ticker(Base):
     first_id = Column(BigInteger)
     last_id = Column(BigInteger)
     count = Column(Integer, index=True)
-
-    created = Column(DateTime, server_default=func.now())
+    created = Column(DateTime, index=True, server_default=func.now())
 
 """
     "symbol": "ETHBTC",

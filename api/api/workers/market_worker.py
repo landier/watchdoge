@@ -33,30 +33,29 @@ class MarketWorker:
             # usd_pairs = [ticker for ticker in details if ticker['symbol'][-4:]=='USDT']
             usd_pairs = [ticker for ticker in details if ticker['symbol'] in PAIRS]
             # ic(usd_pairs)
-            for ticker in usd_pairs:
-                new_ticker_record = Ticker(exchange=self.exchange,
-                                symbol=ticker["symbol"],
-                                price_change=ticker["priceChange"],
-                                price_change_percent=ticker["priceChangePercent"],
-                                weighted_avg_price=ticker["weightedAvgPrice"],
-                                prev_close_price=ticker["prevClosePrice"],
-                                last_price=ticker["lastPrice"],
-                                last_qty=ticker["lastQty"],
-                                bid_price=ticker["bidPrice"],
-                                bid_qty=ticker["bidQty"],
-                                ask_price=ticker["askPrice"],
-                                ask_qty=ticker["askQty"],
-                                open_price=ticker["openPrice"],
-                                high_price=ticker["highPrice"],
-                                low_price=ticker["lowPrice"],
-                                # volume=ticker["volume"],
-                                # quote_volume=ticker["quoteVolume"],
-                                # open_time=ticker["openTime"],
-                                # close_time=ticker["closeTime"],
-                                first_id=ticker["firstId"],
-                                last_id=ticker["lastId"],
-                                count=ticker["count"]
-                                )
-                self.db.add(new_ticker_record)
-                self.db.commit()
+            new_data = [{'exchange': self.exchange,
+                         'symbol': ticker["symbol"],
+                         'price_change': ticker["priceChange"],
+                         'price_change_percent': ticker["priceChangePercent"],
+                         'weighted_avg_price': ticker["weightedAvgPrice"],
+                         'prev_close_price': ticker["prevClosePrice"],
+                         'last_price': ticker["lastPrice"],
+                         'last_qty': ticker["lastQty"],
+                         'bid_price': ticker["bidPrice"],
+                         'bid_qty': ticker["bidQty"],
+                         'ask_price': ticker["askPrice"],
+                         'ask_qty': ticker["askQty"],
+                         'open_price': ticker["openPrice"],
+                         'high_price': ticker["highPrice"],
+                         'low_price': ticker["lowPrice"],
+                         'volume':ticker["volume"],
+                         'open_time':ticker["openTime"],
+                         'close_time':ticker["closeTime"],
+                         'first_id': ticker["firstId"],
+                         'last_id': ticker["lastId"],
+                         'count': ticker["count"]
+                        }
+                        for ticker in usd_pairs]
+            self.db.bulk_insert_mappings(Ticker, new_data)
+            self.db.commit()
             await asyncio.sleep(MARKET_SYNC_PERIOD)

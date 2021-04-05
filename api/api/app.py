@@ -12,6 +12,8 @@ from api.models.base import Base, SessionLocal, engine, get_db
 from api.workers.wallet_worker import WalletWorker
 from api.workers.market_worker import MarketWorker
 
+
+Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()

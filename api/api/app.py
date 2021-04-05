@@ -26,7 +26,7 @@ async def startup_event():
     app.wallet_worker = WalletWorker("Binance")
     app.market_worker = MarketWorker("Binance")
     app.tasks = [
-        # asyncio.create_task(app.wallet_worker.fetch_asset_balances()),
+        asyncio.create_task(app.wallet_worker.fetch_assets()),
         asyncio.create_task(app.market_worker.fetch_markets()),
     ]
 

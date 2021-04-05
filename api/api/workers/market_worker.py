@@ -48,7 +48,7 @@ class MarketWorker:
                                 ask_qty=ticker["askQty"],
                                 open_price=ticker["openPrice"],
                                 high_price=ticker["highPrice"],
-                                # low_price=ticker["lowPrice"],
+                                low_price=ticker["lowPrice"],
                                 # volume=ticker["volume"],
                                 # quote_volume=ticker["quoteVolume"],
                                 # open_time=ticker["openTime"],

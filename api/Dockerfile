@@ -28,10 +28,10 @@ FROM base as final
 
 COPY --from=builder /venv /venv
 COPY --from=builder /app/dist .
-# COPY docker-entrypoint.sh ./
+COPY docker-entrypoint.sh ./
 
 RUN . /venv/bin/activate && pip install *.whl
 
 EXPOSE 8000
 
-# CMD ["./docker-entrypoint.sh"]
+CMD ["./docker-entrypoint.sh"]

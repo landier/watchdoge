@@ -7,6 +7,11 @@ export CRYPTOGRAPHY_DONT_BUILD_RUST=1
 poetry install
 poetry run  uvicorn api.app:app
 ```
+
+# Binance API
+* (https://python-binance.readthedocs.io/en/latest/)
+* (https://github.com/sammchardy/python-binance/)
+
 # API endpoints
 
 * /users

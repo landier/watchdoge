@@ -16,8 +16,8 @@ class Asset(Base):
     balance = Column(Numeric, index=True)
     free = Column(Numeric, index=True)
     locked = Column(Numeric, index=True)
-    created = Column(DateTime, index=True, server_default=func.now())
-    updated = Column(DateTime, index=True, server_default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, index=True, server_default=func.now())
+    updated_at = Column(DateTime, index=True, server_default=func.now(), onupdate=func.now())
 
     # owner_id = Column(Integer, ForeignKey('users.id'))
     # owner = relationship("User", back_populates="assets")

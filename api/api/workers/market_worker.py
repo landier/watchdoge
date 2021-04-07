@@ -29,9 +29,9 @@ class MarketWorker:
         "Fetch markets"
         while not self.shutdown:
             details = await self.client.get_ticker()
-            # usd_pairs = [ticker for ticker in details if 'USD' in ticker['symbol']]
+            usd_pairs = [ticker for ticker in details if 'USD' in ticker['symbol']]
             # usd_pairs = [ticker for ticker in details if ticker['symbol'][-4:]=='USDT']
-            usd_pairs = [ticker for ticker in details if ticker['symbol'] in PAIRS]
+            # usd_pairs = [ticker for ticker in details if ticker['symbol'] in PAIRS]
             # ic(usd_pairs)
             new_data = [{'exchange': self.exchange,
                          'symbol': ticker["symbol"],

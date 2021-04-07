@@ -2,8 +2,13 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./watchdodge.db"
+if os.getenv('ENV') == 'DEV':
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./watchdodge.db"
+else:
+    SQLALCHEMY_DATABASE_URL = "sqlite://// data/watchdodge.db"
+
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 engine = create_engine(

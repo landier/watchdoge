@@ -18,5 +18,5 @@ poetry run  uvicorn api.app:app
 * /users/[id]/wallets
 * /users/[id]/assets
 * /users/[id]/positions
-* /users/[id]/transactions
+* /users/[id]/trades
 * /tickers

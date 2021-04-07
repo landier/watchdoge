@@ -29,7 +29,7 @@ class WalletWorker:
         "Fetch assets"
         while not self.shutdown:
             ic(time.time_ns())
-            details = await self.client.get_account()
+            details = self.client.get_account()
             # TODO: Fix bug!
             non_zero_assets = [a for a in details['balances'] if float(a['free'])+float(a['locked']) > .0]
             ic(non_zero_assets)

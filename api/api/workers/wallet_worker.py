@@ -1,5 +1,6 @@
 import asyncio
 from api.models.asset import Asset
+from api.models.asset_daily_snapshot import AssetDailySnapshot
 import asyncio
 from icecream import ic
 import os
@@ -9,7 +10,7 @@ from decimal import Decimal
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from api.models.base import get_db
-
+import datetime
 
 BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")
 BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")
@@ -29,6 +30,7 @@ class WalletWorker:
         while not self.shutdown:
             ic(time.time_ns())
             details = await self.client.get_account()
+            # TODO: Fix bug!
             non_zero_assets = [a for a in details['balances'] if float(a['free'])+float(a['locked']) > .0]
             ic(non_zero_assets)
             for a in non_zero_assets:
@@ -41,17 +43,31 @@ class WalletWorker:
                 self.db.commit()
             await asyncio.sleep(WALLET_SYNC_PERIOD)
 
+    async def fetch_asset_daily_snapshots(self):
+        "Fetch asset daily snapshot"
+        while not self.shutdown:
+            ic(time.time_ns())
+            # ic(self.client.get_account_snapshot(type="SPOT"))
+            details = self.client.get_account_snapshot(type="SPOT")
+            ic(len(details['snapshotVos']))
+            for daily_snapshot in details['snapshotVos']:
+                update_time = daily_snapshot['updateTime']
+                non_zero_assets = []
+                for asset in daily_snapshot['data']['balances']:
+                    if float(asset['free'])+float(asset['locked']) > .0:
+                        non_zero_assets.append(asset)
 
-async def main():
-    ww1 = WalletWorker(1)
-    asyncio.create_task(ww1.fetch_assets())
-
-
-if __name__ == '__main__':
-    ww = WalletWorker(1)
-
-    loop = asyncio.get_event_loop()
-    tasks = list()
-    tasks.append(loop.create_task(ww.fetch_assets()))
-    loop.run_until_complete(asyncio.wait(tasks))
-    loop.close()
+                for asset in non_zero_assets:
+                    day = datetime.date.fromtimestamp(update_time/1000)
+                    ic(day)
+                    asset_daily_snapshot = AssetDailySnapshot(exchange=self.name,
+                        symbol=asset['asset'],
+                        day=day,
+                        snapshot_time=update_time,
+                        balance=Decimal(asset['free'])+Decimal(asset['locked']),
+                        free=Decimal(asset['free']),
+                        locked=Decimal(asset['locked'])
+                        )
+                    self.db.merge(asset_daily_snapshot)
+                    self.db.commit()
+            await asyncio.sleep(WALLET_SYNC_PERIOD)

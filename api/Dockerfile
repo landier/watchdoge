@@ -4,7 +4,12 @@ ENV PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \
     PYTHONUNBUFFERED=1
 
-RUN apt-get update && apt-get install -y gcc libffi-dev g++
+RUN apt update && \
+    apt install -y \
+        gcc \
+        libffi-dev \
+        g++ \
+        && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 FROM base as builder
@@ -14,7 +19,9 @@ ENV PIP_DEFAULT_TIMEOUT=100 \
     PIP_NO_CACHE_DIR=1 \
     POETRY_VERSION=1.1.5
 
-RUN apt-get update && apt install -y git
+RUN apt update && \
+    apt install -y git && \
+    rm -rf /var/lib/apt/lists/*
 RUN pip install "poetry==$POETRY_VERSION"
 RUN python -m venv /venv
 

@@ -16,6 +16,7 @@ BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")
 BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")
 
 WALLET_SYNC_PERIOD = int(os.getenv("WATCHDODGE_WALLET_SYNC_PERIOD", 60))
+WALLET_SNAPSHOT_SYNC_PERIOD = int(os.getenv("WATCHDODGE_WALLET_SNAPSHOT_SYNC_PERIOD", 60*60*3))
 
 
 class WalletWorker:
@@ -70,4 +71,4 @@ class WalletWorker:
                         )
                     self.db.merge(asset_daily_snapshot)
                     self.db.commit()
-            await asyncio.sleep(WALLET_SYNC_PERIOD)
+            await asyncio.sleep(WALLET_SNAPSHOT_SYNC_PERIOD)

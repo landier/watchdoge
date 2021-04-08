@@ -9,7 +9,7 @@ from api.models import item, user
 from api.models.asset import Asset
 from api.models.ticker import Ticker
 from api.models.base import Base, SessionLocal, engine, get_db
-from api.workers.wallet_worker import WalletWorker
+from api.workers.account_worker import AccountWorker
 from api.workers.market_worker import MarketWorker
 
 
@@ -25,11 +25,11 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startup_event():
-    app.wallet_worker = WalletWorker("Binance")
+    app.account_worker = AccountWorker("Binance")
     app.market_worker = MarketWorker("Binance")
     app.tasks = [
-        asyncio.create_task(app.wallet_worker.fetch_asset_daily_snapshots()),
-        asyncio.create_task(app.wallet_worker.fetch_assets()),
+        asyncio.create_task(app.account_worker.fetch_asset_daily_snapshots()),
+        asyncio.create_task(app.account_worker.fetch_assets()),
         asyncio.create_task(app.market_worker.fetch_markets()),
     ]
 

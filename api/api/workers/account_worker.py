@@ -19,7 +19,7 @@ WALLET_SYNC_PERIOD = int(os.getenv("WATCHDODGE_WALLET_SYNC_PERIOD", 60))
 WALLET_SNAPSHOT_SYNC_PERIOD = int(os.getenv("WATCHDODGE_WALLET_SNAPSHOT_SYNC_PERIOD", 60*60*3))
 
 
-class WalletWorker:
+class AccountWorker:
     def __init__(self, name, db: Session = get_db()):
         self.name = str(name)
         self.db = next(db)

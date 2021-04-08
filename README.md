@@ -8,10 +8,10 @@ poetry install
 poetry run  uvicorn api.app:app
 ```
 
-# Binance API
+# Docs
 * (https://python-binance.readthedocs.io/en/latest/)
 * (https://github.com/sammchardy/python-binance/)
-
+* (https://www.uvicorn.org/)
 # API endpoints
 
 * /users

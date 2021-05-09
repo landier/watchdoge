@@ -12,6 +12,7 @@ from api.models.base import Base, SessionLocal, engine, get_db
 from api.workers.account_worker import AccountWorker
 from api.workers.market_worker import MarketWorker
 from api.clients.binance_client import BinanceClient
+from api.helpers.symbol_helper import SymbolHelper
 
 
 # Base.metadata.drop_all(bind=engine)
@@ -26,6 +27,9 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startup_event(client=BinanceClient()):
+    SymbolHelper(BinanceClient()).refresh_symbols()
+    SymbolHelper(BinanceClient()).refresh_assets()
+
     app.account_worker = AccountWorker("Binance", client)
     app.market_worker = MarketWorker("Binance", client)
     app.tasks = [

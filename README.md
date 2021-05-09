@@ -6,11 +6,13 @@ cd api
 export CRYPTOGRAPHY_DONT_BUILD_RUST=1
 poetry install
 poetry run  uvicorn api.app:app
+poetry run pytest
 ```
 
 # Docs
 * (https://python-binance.readthedocs.io/en/latest/)
 * (https://github.com/sammchardy/python-binance/)
+* (https://github.com/binance-exchange/mytrades-downloader)
 * (https://www.uvicorn.org/)
 # API endpoints
 

@@ -7,8 +7,8 @@ from decimal import Decimal
 from icecream import ic
 from sqlalchemy.orm import Session
 
-from api.models.asset import Asset
-from api.models.asset_daily_snapshot import AssetDailySnapshot
+from api.models.balance import Balance
+from api.models.daily_balance import DailyBalance
 from api.models.base import get_db
 
 
@@ -23,7 +23,7 @@ class AccountWorker:
         self.db = next(db)
         self.shutdown = False
 
-    async def fetch_assets(self):
+    async def fetch_balances(self):
         "Fetch assets"
         while not self.shutdown:
             ic(time.time_ns())
@@ -32,7 +32,7 @@ class AccountWorker:
             non_zero_assets = [a for a in details['balances'] if float(a['free'])+float(a['locked']) > .0]
             ic(non_zero_assets)
             for a in non_zero_assets:
-                asset = Asset(exchange=self.name,
+                asset = Balance(exchange=self.name,
                       symbol=a['asset'],
                       balance=Decimal(a['free'])+Decimal(a['locked']),
                       free=Decimal(a['free']),
@@ -41,7 +41,7 @@ class AccountWorker:
                 self.db.commit()
             await asyncio.sleep(WALLET_SYNC_PERIOD)
 
-    async def fetch_asset_daily_snapshots(self):
+    async def fetch_daily_balances(self):
         "Fetch asset daily snapshot"
         while not self.shutdown:
             ic(time.time_ns())
@@ -58,7 +58,7 @@ class AccountWorker:
                 for asset in non_zero_assets:
                     day = datetime.date.fromtimestamp(update_time/1000)
                     ic(day)
-                    asset_daily_snapshot = AssetDailySnapshot(exchange=self.name,
+                    asset_daily_snapshot = DailyBalance(exchange=self.name,
                         symbol=asset['asset'],
                         day=day,
                         snapshot_time=update_time,

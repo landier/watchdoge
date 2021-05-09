@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from api import crud, schemas
 from api.models import item, user
-from api.models.asset import Asset
+from api.models.balance import Balance
 from api.models.ticker import Ticker
 from api.models.base import Base, SessionLocal, engine, get_db
 from api.workers.account_worker import AccountWorker
@@ -29,8 +29,8 @@ async def startup_event(client=BinanceClient()):
     app.account_worker = AccountWorker("Binance", client)
     app.market_worker = MarketWorker("Binance", client)
     app.tasks = [
-        asyncio.create_task(app.account_worker.fetch_asset_daily_snapshots()),
-        asyncio.create_task(app.account_worker.fetch_assets()),
+        asyncio.create_task(app.account_worker.fetch_daily_balances()),
+        asyncio.create_task(app.account_worker.fetch_balances()),
         asyncio.create_task(app.market_worker.fetch_markets()),
     ]
 
@@ -56,10 +56,10 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
-@app.get("/assets/", response_model=List[schemas.Asset])
-def get_assets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    assets = db.query(Asset).offset(skip).limit(limit).all()
-    return assets
+@app.get("/balances/", response_model=List[schemas.Balance])
+def get_balances(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    balances = db.query(Balance).offset(skip).limit(limit).all()
+    return balances
 
 
 @app.get("/users/{user_id}", response_model=schemas.User)

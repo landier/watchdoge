@@ -3,7 +3,7 @@ from decimal import Decimal
 from pydantic import BaseModel
 
 
-class Asset(BaseModel):
+class Balance(BaseModel):
     exchange: str
     symbol: str
     balance: Decimal

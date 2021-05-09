@@ -42,4 +42,6 @@ RUN . /venv/bin/activate && pip install *.whl
 VOLUME /data
 EXPOSE 8000
 
+ENV ENV PROD
+
 CMD ["./docker-entrypoint.sh"]

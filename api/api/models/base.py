@@ -4,10 +4,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-if os.getenv('ENV') == 'DEV':
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./watchdodge.db"
+if os.getenv('ENV') == 'PROD':
+    SQLALCHEMY_DATABASE_URL = "sqlite:////data/watchdodge.db"
 else:
-    SQLALCHEMY_DATABASE_URL = "sqlite://// data/watchdodge.db"
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./watchdodge.db"
 
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 

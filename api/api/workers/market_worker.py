@@ -1,29 +1,25 @@
 import asyncio
 import os
-import time
 from decimal import Decimal
 
-from binance.client import Client
-from fastapi import Depends
 from icecream import ic
 from sqlalchemy.orm import Session
 
 from api.models import Ticker
 from api.models.base import get_db
 
-BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")
-BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")
 
 MARKET_SYNC_PERIOD = int(os.getenv("WATCHDODGE_MARKET_SYNC_PERIOD", 60))
 
 PAIRS = ["BTCUSDT", "ETHUSDT", "ADAUSDT"]
 
 class MarketWorker:
-    def __init__(self, exchange, db: Session = get_db()):
+    def __init__(self, exchange, client, db: Session = get_db()):
         self.exchange = str(exchange)
+        self.client = client
         self.db = next(db)
         self.shutdown = False
-        self.client = Client(BINANCE_API_KEY, BINANCE_API_SECRET)
+
 
     async def fetch_markets(self):
         "Fetch markets"
@@ -59,3 +55,42 @@ class MarketWorker:
             self.db.bulk_insert_mappings(Ticker, new_data)
             self.db.commit()
             await asyncio.sleep(MARKET_SYNC_PERIOD)
+
+    async def fetch_pairs(self):
+        "Fetch pairs"
+        while not self.shutdown:
+            response = self.client.exchange_info()
+            if 'data' in response:
+                response = response['data']
+                ic(response)
+                # pairs = []
+                # for s in response['symbols']:
+                #     pairs.append({
+                #         s['symbol'])
+                    
+            # new_data = [{'exchange': self.exchange,
+            #              'symbol': ticker["symbol"],
+            #              'price_change': ticker["priceChange"],
+            #              'price_change_percent': ticker["priceChangePercent"],
+            #              'weighted_avg_price': ticker["weightedAvgPrice"],
+            #              'prev_close_price': ticker["prevClosePrice"],
+            #              'last_price': ticker["lastPrice"],
+            #              'last_qty': ticker["lastQty"],
+            #              'bid_price': ticker["bidPrice"],
+            #              'bid_qty': ticker["bidQty"],
+            #              'ask_price': ticker["askPrice"],
+            #              'ask_qty': ticker["askQty"],
+            #              'open_price': ticker["openPrice"],
+            #              'high_price': ticker["highPrice"],
+            #              'low_price': ticker["lowPrice"],
+            #              'volume':ticker["volume"],
+            #              'open_time':ticker["openTime"],
+            #              'close_time':ticker["closeTime"],
+            #              'first_id': ticker["firstId"],
+            #              'last_id': ticker["lastId"],
+            #              'count': ticker["count"]
+            #             }
+            #             for ticker in usd_pairs]
+            # self.db.bulk_insert_mappings(Ticker, new_data)
+            # self.db.commit()
+            # await asyncio.sleep(MARKET_SYNC_PERIOD)

@@ -11,6 +11,7 @@ from api.models.ticker import Ticker
 from api.models.base import Base, SessionLocal, engine, get_db
 from api.workers.account_worker import AccountWorker
 from api.workers.market_worker import MarketWorker
+from api.clients.binance_client import BinanceClient
 
 
 # Base.metadata.drop_all(bind=engine)
@@ -18,15 +19,15 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-
 # import logging
 # logging.basicConfig()
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
+
 @app.on_event("startup")
-async def startup_event():
-    app.account_worker = AccountWorker("Binance")
-    app.market_worker = MarketWorker("Binance")
+async def startup_event(client=BinanceClient()):
+    app.account_worker = AccountWorker("Binance", client)
+    app.market_worker = MarketWorker("Binance", client)
     app.tasks = [
         asyncio.create_task(app.account_worker.fetch_asset_daily_snapshots()),
         asyncio.create_task(app.account_worker.fetch_assets()),

@@ -1,30 +1,27 @@
 import asyncio
-from api.models.asset import Asset
-from api.models.asset_daily_snapshot import AssetDailySnapshot
-import asyncio
-from icecream import ic
+import datetime
 import os
-from binance.client import Client
 import time
 from decimal import Decimal
-from fastapi import Depends
-from sqlalchemy.orm import Session
-from api.models.base import get_db
-import datetime
 
-BINANCE_API_KEY=os.getenv("BINANCE_API_KEY")
-BINANCE_API_SECRET=os.getenv("BINANCE_API_SECRET")
+from icecream import ic
+from sqlalchemy.orm import Session
+
+from api.models.asset import Asset
+from api.models.asset_daily_snapshot import AssetDailySnapshot
+from api.models.base import get_db
+
 
 WALLET_SYNC_PERIOD = int(os.getenv("WATCHDODGE_WALLET_SYNC_PERIOD", 60))
 WALLET_SNAPSHOT_SYNC_PERIOD = int(os.getenv("WATCHDODGE_WALLET_SNAPSHOT_SYNC_PERIOD", 60*60*3))
 
 
 class AccountWorker:
-    def __init__(self, name, db: Session = get_db()):
+    def __init__(self, name, client, db: Session = get_db()):
         self.name = str(name)
+        self.client = client
         self.db = next(db)
         self.shutdown = False
-        self.client = Client(BINANCE_API_KEY, BINANCE_API_SECRET)
 
     async def fetch_assets(self):
         "Fetch assets"
@@ -72,3 +69,6 @@ class AccountWorker:
                     self.db.merge(asset_daily_snapshot)
                     self.db.commit()
             await asyncio.sleep(WALLET_SNAPSHOT_SYNC_PERIOD)
+
+    async def fetch_trades(self):
+        pass

@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session
 
 from api import crud, schemas
 from api.models import item, user
+from api.models.asset import Asset
 from api.models.balance import Balance
+from api.models.symbol import Symbol
 from api.models.ticker import Ticker
 from api.models.base import Base, SessionLocal, engine, get_db
 from api.workers.account_worker import AccountWorker
@@ -65,6 +67,15 @@ def get_balances(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     balances = db.query(Balance).offset(skip).limit(limit).all()
     return balances
 
+@app.get("/assets/", response_model=List[schemas.Asset])
+def get_assets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    assets = db.query(Asset).offset(skip).limit(limit).all()
+    return assets
+
+@app.get("/symbols/", response_model=List[schemas.Symbol])
+def get_symbols(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    symbols = db.query(Symbol).offset(skip).limit(limit).all()
+    return symbols
 
 @app.get("/users/{user_id}", response_model=schemas.User)
 def read_user(user_id: int, db: Session = Depends(get_db)):

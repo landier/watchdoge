@@ -12,7 +12,7 @@ class DailyBalance(Base):
     __tablename__ = "daily_balances"
 
     exchange = Column(String, primary_key=True, index=True)
-    symbol = Column(String, primary_key=True, index=True)
+    asset = Column(String, primary_key=True, index=True)
     day = Column(Date, primary_key=True, index=True)
     snapshot_time = Column(String, index=True)
     balance = Column(Numeric, index=True)

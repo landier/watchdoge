@@ -12,7 +12,7 @@ class Balance(Base):
 
     # id = Column(Integer, primary_key=True, index=True)
     exchange = Column(String, primary_key=True, index=True)
-    symbol = Column(String, primary_key=True, index=True)
+    asset = Column(String, primary_key=True, index=True)
     balance = Column(Numeric, index=True)
     free = Column(Numeric, index=True)
     locked = Column(Numeric, index=True)

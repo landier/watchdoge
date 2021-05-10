@@ -35,8 +35,9 @@ async def startup_event(client=BinanceClient()):
     app.account_worker = AccountWorker("Binance", client)
     app.market_worker = MarketWorker("Binance", client)
     app.tasks = [
-        asyncio.create_task(app.account_worker.fetch_daily_balances()),
         asyncio.create_task(app.account_worker.fetch_balances()),
+        asyncio.create_task(app.account_worker.fetch_daily_balances()),
+        asyncio.create_task(app.account_worker.fetch_trades()),
         asyncio.create_task(app.market_worker.fetch_markets()),
     ]
 

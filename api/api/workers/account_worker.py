@@ -73,8 +73,16 @@ class AccountWorker:
         """
         while not self.shutdown:
             for symbol, in self.db.query(Symbol.symbol).order_by(Symbol.symbol):
+<<<<<<< HEAD
                 trades = self.client.get_my_trades(symbol=symbol)
                 for t in trades:
+=======
+                ic(symbol)
+                trades = self.client.get_my_trades(symbol=symbol)
+                for t in trades:
+                    ic(t)
+                    # ic(datetime.datetime(t['time']/1000))
+>>>>>>> f7697e7 (WIP - Add fetch trades)
                     trade = Trade(exchange=self.name,
                         symbol=t['symbol'],
                         trade_id=t['id'],
@@ -83,13 +91,41 @@ class AccountWorker:
                         price=Decimal(t['price']),
                         quantity=Decimal(t['qty']),
                         quote_quantity=Decimal(t['quoteQty']),
+<<<<<<< HEAD
                         commission=Decimal(t['commission']),
                         commission_asset=t['commissionAsset'],
                         traded_at=datetime.fromtimestamp(int(t['time']/1000)),
+=======
+                        # commission=Decimal(t['commission']),
+                        # commission_asset=Decimal(t['commissionAsset']),
+                        # trade_at=datetime.datetime(t['time']/1000),
+                        # datetime.date.fromtimestamp(update_time/1000)
+>>>>>>> f7697e7 (WIP - Add fetch trades)
                         is_buyer=t['isBuyer'],
                         is_maker=t['isMaker'],
                         is_best_match=t['isBestMatch'],
                         )
+<<<<<<< HEAD
                     self.db.merge(trade)
                 self.db.commit()
             await asyncio.sleep(TRADES_SYNC_PERIOD) 
+=======
+                    ic(trade)
+                    self.db.merge(trade)
+                self.db.commit()
+            await asyncio.sleep(TRADES_SYNC_PERIOD) 
+
+    # 'symbol': 'BCHBUSD',
+    # 'id': 6629335,
+    # 'orderId': 239005272,
+    # 'orderListId': -1,
+    # 'price': '960.00000000',
+    # 'qty': '0.25064000',
+    # 'quoteQty': '240.61440000',
+    # 'commission': '0.00000000',
+    # 'commissionAsset': 'BNB',
+    # 'time': 1618825932410,
+    # 'isBuyer': True,
+    # 'isMaker': True,
+    # 'isBestMatch': True
+>>>>>>> f7697e7 (WIP - Add fetch trades)

@@ -1,4 +1,5 @@
 import asyncio
+import os
 from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -17,9 +18,6 @@ from api.clients.binance_client import BinanceClient
 from api.helpers.symbol_helper import SymbolHelper
 
 
-# Base.metadata.drop_all(bind=engine)
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI()
 
 # import logging
@@ -29,6 +27,10 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startup_event(client=BinanceClient()):
+    if os.environ.get('ENV', 'dev') == 'dev':
+        Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+
     SymbolHelper(BinanceClient()).refresh_symbols()
     SymbolHelper(BinanceClient()).refresh_assets()
 

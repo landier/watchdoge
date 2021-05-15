@@ -29,11 +29,9 @@ class AccountWorker:
     async def fetch_balances(self):
         "Fetch assets"
         while not self.shutdown:
-            ic(time.time_ns())
             details = self.client.get_account()
             # TODO: Fix bug!
             non_zero_assets = [a for a in details['balances'] if float(a['free'])+float(a['locked']) > .0]
-            ic(non_zero_assets)
             for a in non_zero_assets:
                 asset = Balance(exchange=self.name,
                       asset=a['asset'],
@@ -47,10 +45,7 @@ class AccountWorker:
     async def fetch_daily_balances(self):
         "Fetch asset daily snapshot"
         while not self.shutdown:
-            ic(time.time_ns())
-            # ic(self.client.get_account_snapshot(type="SPOT"))
             details = self.client.get_account_snapshot(type="SPOT")
-            ic(len(details['snapshotVos']))
             for daily_snapshot in details['snapshotVos']:
                 update_time = daily_snapshot['updateTime']
                 non_zero_assets = []
@@ -60,7 +55,6 @@ class AccountWorker:
 
                 for asset in non_zero_assets:
                     day = datetime.date.fromtimestamp(update_time/1000)
-                    ic(day)
                     asset_daily_snapshot = DailyBalance(exchange=self.name,
                         asset=asset['asset'],
                         day=day,

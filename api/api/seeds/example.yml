@@ -1,0 +1,6 @@
+users:
+  1:
+    email: admin@email.com
+    password: password
+    binance_api_key:
+    binance_api_secret:

@@ -16,6 +16,7 @@ from api.workers.account_worker import AccountWorker
 from api.workers.market_worker import MarketWorker
 from api.clients.binance_client import BinanceClient
 from api.helpers.symbol_helper import SymbolHelper
+from api.helpers.seeder import load_seed_data
 
 
 app = FastAPI()
@@ -31,6 +32,9 @@ async def startup_event(client=BinanceClient()):
         Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
+    
+    load_seed_data()
+    # exit(0)
     SymbolHelper(BinanceClient()).refresh_symbols()
     SymbolHelper(BinanceClient()).refresh_assets()
 

@@ -4,6 +4,10 @@ version = "0.1.0"
 description = ""
 authors = ["Nicolas Landier <nicolas.landier@gmail.com>"]
 
+[tool.isort]
+profile = "hug"
+src_paths = ["api"]
+
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = "^0.63.0"
@@ -15,7 +19,8 @@ SQLAlchemy = "1.3.23"
 icecream = "^2.1.0"
 pandas = "^1.2.3"
 arrow = "^1.0.3"
-python-binance = {git = "https://github.com/sammchardy/python-binance.git"}
+python-binance = "^1.0.1"
+ddtrace = "^0.49.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
